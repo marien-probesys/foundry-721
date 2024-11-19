@@ -1,0 +1,33 @@
+name: Continuous Integration
+
+on:
+    push:
+        branches:
+            - main
+
+env:
+    NODOCKER: true
+
+jobs:
+    build:
+        name: PHP linters
+
+        runs-on: ubuntu-latest
+
+        steps:
+        - uses: actions/checkout@v2
+          with:
+              submodules: true
+
+        - name: Setup PHP
+          uses: shivammathur/setup-php@v2
+          with:
+              php-version: '8.2'
+              coverage: xdebug
+              extensions: pdo, pdo_pgsql
+
+        - name: Install the dependencies
+          run: make install
+
+        - name: Run the linters
+          run: make lint
